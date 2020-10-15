@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.Length;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import br.com.itau.casadocodigo.ecommerceAPI.config.validacao.UniqueValue;
 import br.com.itau.casadocodigo.ecommerceAPI.model.Usuario;
 
 public class UsuarioForm {
@@ -19,6 +20,7 @@ public class UsuarioForm {
 	private LocalDateTime instanteCadastro = LocalDateTime.now();
 	@NotBlank
 	@Email(message = "O email deve estar em um formato válido!")
+	@UniqueValue(domainClass = Usuario.class, fieldName = "login")
 	private String login;
 	@Length(min = 6)
 	private String senha;

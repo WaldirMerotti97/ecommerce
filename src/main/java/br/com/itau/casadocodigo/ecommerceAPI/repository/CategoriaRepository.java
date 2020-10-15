@@ -5,11 +5,11 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.itau.casadocodigo.ecommerceAPI.model.Usuario;
+import br.com.itau.casadocodigo.ecommerceAPI.model.Categoria;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
 
-	Optional<Usuario> findByLogin(String login);
+	Optional<Categoria> findByNome(String categoriaMae);
 
 }
