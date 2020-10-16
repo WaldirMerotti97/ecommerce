@@ -1,9 +1,13 @@
 package br.com.itau.casadocodigo.ecommerceAPI.model;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -15,6 +19,8 @@ public class Categoria {
 	private int id;
 	private int idCategoriaMae;
 	private String nome;
+	@OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+	private List<Produto> produtos;
 
 	@Deprecated
 	public Categoria() {

@@ -54,7 +54,7 @@ public class CategoriaController {
 
 		categoriaRepository.save(categoria);
 
-		URI uri = uriComponentsBuilder.path("/categoria/{id}").buildAndExpand(categoria.getId()).toUri();
+		URI uri = uriComponentsBuilder.path("/categorias/{id}").buildAndExpand(categoria.getId()).toUri();
 
 		return ResponseEntity.created(uri)
 				.body(new CategoriaDTO(categoria.getId(), categoria.getNome(), categoriaForm.getCategoriaMae()));
