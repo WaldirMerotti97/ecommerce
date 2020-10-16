@@ -49,15 +49,9 @@ public class ProdutoController {
 		Optional<Categoria> categoria = categoriaRepository.findByNome(produtoForm.getCategoria());
 
 		// 1
-		Produto produto = produtoForm.converter(categoria.get());
+		Produto produto = produtoForm.converter(categoria.get(), produtoForm.getCaracteristicas());
 
 		produtoRepository.save(produto);
-
-		// 1
-		produtoForm.getCaracteristicas().forEach(caracteristica -> {
-			caracteristica.setProduto(produto);
-			this.caracteristicaRepository.save(caracteristica);
-		});
 
 		URI uri = uriComponentsBuilder.path("/produtos/{id}").buildAndExpand(produto.getId()).toUri();
 

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import br.com.itau.casadocodigo.ecommerceAPI.model.Caracteristica;
 
 public class ProdutoDTO {
@@ -12,6 +14,7 @@ public class ProdutoDTO {
 	private String nome;
 	private BigDecimal valor;
 	private int quantidadeDisponivel;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	private LocalDateTime instanteCadastro;
 	private String descricao;
 	private List<Caracteristica> caracteristicas;

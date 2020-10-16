@@ -34,9 +34,9 @@ public class ProdutoForm {
 	@Size(min = 3)
 	private List<Caracteristica> caracteristicas;
 
-	public Produto converter(Categoria categoria) {
+	public Produto converter(Categoria categoria, List<Caracteristica> listaCaracteristicas) {
 
-		return new Produto(this.nome, this.valor, this.quantidadeDisponivel, this.descricao, categoria);
+		return new Produto(this.nome, this.valor, this.quantidadeDisponivel, this.descricao, categoria, listaCaracteristicas);
 	}
 
 	public String getNome() {

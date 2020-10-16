@@ -38,13 +38,14 @@ public class Produto {
 	@JoinColumn(name = "categoria_id", referencedColumnName = "id")
 	private Categoria categoria;
 
-	public Produto(@NotBlank String nome, @NotNull @DecimalMin("0.0") BigDecimal valor,
-			@Min(0) int quantidadeDisponivel, @NotBlank @Length(max = 1000) String descricao, Categoria categoria) {
+	public Produto(String nome, BigDecimal valor, int quantidadeDisponivel, String descricao, Categoria categoria,
+			List<Caracteristica> listaCaracteristicas) {
 		this.nome = nome;
 		this.valor = valor;
 		this.quantidadeDisponivel = quantidadeDisponivel;
 		this.descricao = descricao;
 		this.categoria = categoria;
+		this.caracteristicas = listaCaracteristicas;
 	}
 
 	public int getId() {
@@ -61,6 +62,14 @@ public class Produto {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
 	}
 
 	public int getQuantidadeDisponivel() {
@@ -95,12 +104,12 @@ public class Produto {
 		this.caracteristicas = caracteristicas;
 	}
 
-	public BigDecimal getValor() {
-		return valor;
+	public Categoria getCategoria() {
+		return categoria;
 	}
 
-	public void setValor(BigDecimal valor) {
-		this.valor = valor;
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 }
