@@ -1,5 +1,6 @@
 package br.com.itau.casadocodigo.ecommerceAPI.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,26 +9,31 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
-@Table(name = "caracteristicas_produtos")
-public class Caracteristica {
+@Table(name = "imagem")
+public class Imagem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String nome;
-	private String descricao;
-	@JsonIgnore
-	@ManyToOne
+	private String link;
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "produto_id", referencedColumnName = "id")
 	private Produto produto;
 
-	public Caracteristica(String nome, String descricao, Produto produto) {
-		this.nome = nome;
-		this.descricao = descricao;
+	public Imagem(String link, Produto produto) {
+		this.link = link;
 		this.produto = produto;
+	}
+
+	@Deprecated
+	public Imagem() {
+
+	}
+
+	public Imagem(Produto produto, String link) {
+		this.produto = produto;
+		this.link = link;
 	}
 
 	public int getId() {
@@ -38,20 +44,12 @@ public class Caracteristica {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getLink() {
+		return link;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
+	public void setLink(String link) {
+		this.link = link;
 	}
 
 	public Produto getProduto() {

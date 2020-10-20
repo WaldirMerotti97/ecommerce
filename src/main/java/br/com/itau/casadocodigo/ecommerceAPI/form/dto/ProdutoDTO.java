@@ -3,10 +3,12 @@ package br.com.itau.casadocodigo.ecommerceAPI.form.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.itau.casadocodigo.ecommerceAPI.model.Caracteristica;
+import br.com.itau.casadocodigo.ecommerceAPI.model.Produto;
 
 public class ProdutoDTO {
 
@@ -17,17 +19,17 @@ public class ProdutoDTO {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	private LocalDateTime instanteCadastro;
 	private String descricao;
-	private List<Caracteristica> caracteristicas;
+	private Set<Caracteristica> caracteristicas;
 
 	public ProdutoDTO(int id, String nome, BigDecimal valor, int quantidadeDisponivel, LocalDateTime instanteCadastro,
-			String descricao, List<Caracteristica> caracteristicas) {
+			String descricao, Set<Caracteristica> set) {
 		this.id = id;
 		this.nome = nome;
 		this.valor = valor;
 		this.quantidadeDisponivel = quantidadeDisponivel;
 		this.instanteCadastro = instanteCadastro;
 		this.descricao = descricao;
-		this.caracteristicas = caracteristicas;
+		this.caracteristicas = set;
 
 	}
 
@@ -79,11 +81,11 @@ public class ProdutoDTO {
 		this.descricao = descricao;
 	}
 
-	public List<Caracteristica> getCaracteristicas() {
+	public Set<Caracteristica> getCaracteristicas() {
 		return caracteristicas;
 	}
 
-	public void setCaracteristicas(List<Caracteristica> caracteristicas) {
+	public void setCaracteristicas(Set<Caracteristica> caracteristicas) {
 		this.caracteristicas = caracteristicas;
 	}
 

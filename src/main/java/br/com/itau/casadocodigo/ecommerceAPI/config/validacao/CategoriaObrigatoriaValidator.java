@@ -8,7 +8,7 @@ import javax.persistence.Query;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class CategoriaObrigatoriaValidator implements ConstraintValidator<CategoriaObrigatoria, String> {
+public class CategoriaObrigatoriaValidator implements ConstraintValidator<CategoriaObrigatoria, Integer> {
 
 	private String nomeDominio;
 	private Class<?> klass;
@@ -22,7 +22,7 @@ public class CategoriaObrigatoriaValidator implements ConstraintValidator<Catego
 	}
 
 	@Override
-	public boolean isValid(String value, ConstraintValidatorContext context) {
+	public boolean isValid(Integer value, ConstraintValidatorContext context) {
 
 		Query query = entityManager
 				.createQuery("select 1 from " + klass.getName() + " where " + nomeDominio + "=:value");

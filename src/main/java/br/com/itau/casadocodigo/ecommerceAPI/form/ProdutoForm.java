@@ -1,42 +1,62 @@
 package br.com.itau.casadocodigo.ecommerceAPI.form;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Min;
+import javax.persistence.EntityManager;
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
 import br.com.itau.casadocodigo.ecommerceAPI.config.validacao.CategoriaObrigatoria;
+import br.com.itau.casadocodigo.ecommerceAPI.config.validacao.UniqueValue;
 import br.com.itau.casadocodigo.ecommerceAPI.model.Caracteristica;
 import br.com.itau.casadocodigo.ecommerceAPI.model.Categoria;
 import br.com.itau.casadocodigo.ecommerceAPI.model.Produto;
+import br.com.itau.casadocodigo.ecommerceAPI.model.Usuario;
 
 public class ProdutoForm {
 
 	@NotBlank
+	@UniqueValue(domainClass = Produto.class, fieldName = "nome")
 	private String nome;
 	@NotNull
-	@DecimalMin(value = "0.0")
+	@Positive
 	private BigDecimal valor;
-	@Min(0)
+	@Positive
 	private int quantidadeDisponivel;
-	@NotBlank
-	@CategoriaObrigatoria(domainClass = Categoria.class, fieldName = "nome")
-	private String categoria;
+	@NotNull
+	@CategoriaObrigatoria(domainClass = Categoria.class, fieldName = "id")
+	private int categoria;
 	@NotBlank
 	@Length(max = 1000)
 	private String descricao;
 	@Size(min = 3)
-	private List<Caracteristica> caracteristicas;
+	@Valid
+	private List<CaracteristicaForm> caracteristicas = new ArrayList<>();
 
-	public Produto converter(Categoria categoria, List<Caracteristica> listaCaracteristicas) {
+	public ProdutoForm(@NotBlank String nome, @NotNull @Positive BigDecimal valor, @Positive int quantidadeDisponivel,
+			@NotNull int categoria, @NotBlank @Length(max = 1000) String descricao,
+			@Size(min = 3) List<CaracteristicaForm> caracteristicas) {
+		this.nome = nome;
+		this.valor = valor;
+		this.quantidadeDisponivel = quantidadeDisponivel;
+		this.categoria = categoria;
+		this.descricao = descricao;
+		this.caracteristicas = caracteristicas;
+	}
 
-		return new Produto(this.nome, this.valor, this.quantidadeDisponivel, this.descricao, categoria, listaCaracteristicas);
+	public Produto converter(Usuario usuario, EntityManager entityManager) {
+		Categoria categoria = entityManager.find(Categoria.class, this.categoria);
+		return new Produto(this.nome, this.valor, this.quantidadeDisponivel, this.descricao, this.caracteristicas,
+				categoria, usuario);
 	}
 
 	public String getNome() {
@@ -71,20 +91,37 @@ public class ProdutoForm {
 		this.descricao = descricao;
 	}
 
-	public List<Caracteristica> getCaracteristicas() {
+	public List<CaracteristicaForm> getCaracteristicas() {
 		return caracteristicas;
 	}
 
-	public void setCaracteristicas(List<Caracteristica> caracteristicas) {
+	public void setCaracteristicas(List<CaracteristicaForm> caracteristicas) {
 		this.caracteristicas = caracteristicas;
 	}
 
-	public String getCategoria() {
+	public int getCategoria() {
 		return categoria;
 	}
 
-	public void setCategoria(String categoria) {
+	public void setCategoria(int categoria) {
 		this.categoria = categoria;
+	}
+
+	@Override
+	public String toString() {
+		return "ProdutoForm [nome=" + nome + ", valor=" + valor + ", quantidadeDisponivel=" + quantidadeDisponivel
+				+ ", categoria=" + categoria + ", descricao=" + descricao + ", caracteristicas=" + caracteristicas
+				+ "]";
+	}
+
+	public boolean temCaracteristicasIguais() {
+		HashSet<String> nomesIguais = new HashSet<>();
+		for (CaracteristicaForm car : caracteristicas) {
+			if (!nomesIguais.add(car.getNome())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

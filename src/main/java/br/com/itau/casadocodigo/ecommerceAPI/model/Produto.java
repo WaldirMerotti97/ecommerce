@@ -2,7 +2,10 @@ package br.com.itau.casadocodigo.ecommerceAPI.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -20,6 +23,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
 
+import br.com.itau.casadocodigo.ecommerceAPI.form.CaracteristicaForm;
+
 @Entity
 @Table(name = "produto")
 public class Produto {
@@ -32,20 +37,32 @@ public class Produto {
 	private int quantidadeDisponivel;
 	private String descricao;
 	private LocalDateTime instanteCadastro = LocalDateTime.now();
-	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL)
-	private List<Caracteristica> caracteristicas;
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.PERSIST)
+	private Set<Caracteristica> caracteristicas = new HashSet<>();
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "categoria_id", referencedColumnName = "id")
 	private Categoria categoria;
+	@ManyToOne(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "usuario_id", referencedColumnName = "id")
+	private Usuario usuario;
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.MERGE)
+	private Set<Imagem> imagens = new HashSet<>();
 
-	public Produto(String nome, BigDecimal valor, int quantidadeDisponivel, String descricao, Categoria categoria,
-			List<Caracteristica> listaCaracteristicas) {
+	public Produto(String nome, BigDecimal valor, int quantidadeDisponivel, String descricao,
+			List<CaracteristicaForm> listaCaracteristicas, Categoria categoria, Usuario usuario) {
 		this.nome = nome;
 		this.valor = valor;
 		this.quantidadeDisponivel = quantidadeDisponivel;
 		this.descricao = descricao;
 		this.categoria = categoria;
-		this.caracteristicas = listaCaracteristicas;
+		this.usuario = usuario;
+		Set<Caracteristica> caracteristicas = listaCaracteristicas.stream().map(car -> car.converter(this))
+				.collect(Collectors.toSet());
+		this.caracteristicas.addAll(caracteristicas);
+	}
+
+	public Produto() {
+
 	}
 
 	public int getId() {
@@ -96,11 +113,11 @@ public class Produto {
 		this.instanteCadastro = instanteCadastro;
 	}
 
-	public List<Caracteristica> getCaracteristicas() {
+	public Set<Caracteristica> getCaracteristicas() {
 		return caracteristicas;
 	}
 
-	public void setCaracteristicas(List<Caracteristica> caracteristicas) {
+	public void setCaracteristicas(Set<Caracteristica> caracteristicas) {
 		this.caracteristicas = caracteristicas;
 	}
 
@@ -110,6 +127,41 @@ public class Produto {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public Set<Imagem> getImagens() {
+		return imagens;
+	}
+
+	public void setImagens(Set<Imagem> imagens) {
+		this.imagens = imagens;
+	}
+
+	public void associaImagens(Set<String> links) {
+
+		Set<Imagem> imagens = links.stream().map(link -> new Imagem(this, link)).collect(Collectors.toSet());
+		this.imagens.addAll(imagens);
+	}
+
+	@Override
+	public String toString() {
+		return "Produto [id=" + id + ", nome=" + nome + ", valor=" + valor + ", quantidadeDisponivel="
+				+ quantidadeDisponivel + ", descricao=" + descricao + ", instanteCadastro=" + instanteCadastro
+				+ ", caracteristicas=" + caracteristicas + ", categoria=" + categoria + ", usuario=" + usuario
+				+ ", imagens=" + imagens + "]";
+	}
+
+	public boolean pertenceAoUsuario(Usuario usuario) {
+
+		return this.usuario.getId() == usuario.getId();
 	}
 
 }
